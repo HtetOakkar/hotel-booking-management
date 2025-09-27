@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amenities - Serene Shores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Header & Navigation Bar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+    <!-- Page Header -->
+    <section class="bg-gray-700 py-20 text-white text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-playfair font-bold">Our World-Class Amenities</h1>
+            <p class="text-lg md:text-xl mt-4">Designed for your relaxation and enjoyment.</p>
+        </div>
+    </section>
+
+    <!-- Amenities Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-6 space-y-16">
+
+            <!-- Recreation Section -->
+            <div th:if="${amenityGroups.containsKey(T(com.example.hotelbookingmanagement.model.enums.AmenityType).RECREATION)}">
+                <h2 class="text-3xl font-playfair font-bold text-center mb-8">Recreation & Wellness</h2>
+                <div class="space-y-12">
+                    <div th:each="amenity, iterStat : ${amenityGroups.get(T(com.example.hotelbookingmanagement.model.enums.AmenityType).RECREATION)}" class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="rounded-lg overflow-hidden shadow-lg" th:classappend="${iterStat.odd} ? 'md:order-last' : ''">
+                            <img th:src="${amenity.imageUrl}" alt="Amenity Image" class="w-full h-80 object-cover">
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-playfair font-bold mb-4" th:text="${amenity.name}"></h3>
+                            <p class="text-gray-600 leading-relaxed" th:text="${amenity.description}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dining Section -->
+            <div th:if="${amenityGroups.containsKey(T(com.example.hotelbookingmanagement.model.enums.AmenityType).DINING)}">
+                <h2 class="text-3xl font-playfair font-bold text-center mb-8 mt-16">Dining</h2>
+                <div class="space-y-12">
+                    <div th:each="amenity, iterStat : ${amenityGroups.get(T(com.example.hotelbookingmanagement.model.enums.AmenityType).DINING)}" class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="rounded-lg overflow-hidden shadow-lg" th:classappend="${iterStat.odd} ? 'md:order-last' : ''">
+                            <img th:src="${amenity.imageUrl}" alt="Amenity Image" class="w-full h-80 object-cover">
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-playfair font-bold mb-4" th:text="${amenity.name}"></h3>
+                            <p class="text-gray-600 leading-relaxed" th:text="${amenity.description}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Section -->
+            <div th:if="${amenityGroups.containsKey(T(com.example.hotelbookingmanagement.model.enums.AmenityType).BUSINESS)}">
+                <h2 class="text-3xl font-playfair font-bold text-center mb-8 mt-16">Business & Services</h2>
+                <div class="space-y-12">
+                    <div th:each="amenity, iterStat : ${amenityGroups.get(T(com.example.hotelbookingmanagement.model.enums.AmenityType).BUSINESS)}" class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="rounded-lg overflow-hidden shadow-lg" th:classappend="${iterStat.odd} ? 'md:order-last' : ''">
+                            <img th:src="${amenity.imageUrl}" alt="Amenity Image" class="w-full h-80 object-cover">
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-playfair font-bold mb-4" th:text="${amenity.name}"></h3>
+                            <p class="text-gray-600 leading-relaxed" th:text="${amenity.description}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/index_script.js}"></script>
+</body>
+</html>
+

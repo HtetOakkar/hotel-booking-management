@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Details - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link:hover { background-color: #3f51b5; }
+        .sidebar-link.active { background-color: #303f9f; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<div class="flex h-screen bg-gray-200">
+    <!-- Sidebar -->
+    <div th:replace="~{admin/fragments/admin-dashboard-sidebar :: sidebar(activePage='guests')}"></div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <div th:replace="~{admin/fragments/admin-header :: header(pageTitle='Guest Details')}"></div>
+
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6 md:p-8">
+            <div class="max-w-7xl mx-auto">
+                <a th:href="@{/admins/guests}" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    Back to All Guests
+                </a>
+
+                <!-- Guest Information -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden p-8 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4" th:text="${guest.name}">Guest Name</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Email Address</label>
+                            <p class="mt-1 text-base text-gray-900" th:text="${guest.email}"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Phone Number</label>
+                            <p class="mt-1 text-base text-gray-900" th:text="${guest.phoneNumber}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking History -->
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Booking History</h2>
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <tr>
+                            <th class="px-6 py-3">Tracking ID</th>
+                            <th class="px-6 py-3">Room Type</th>
+                            <th class="px-6 py-3">Check-in</th>
+                            <th class="px-6 py-3">Check-out</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="booking : ${bookings}" class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-mono text-xs" th:text="${booking.trackingId}"></td>
+                            <td class="px-6 py-4 font-medium text-gray-900" th:text="${booking.roomTypeName}"></td>
+                            <td class="px-6 py-4" th:text="${booking.checkInDate}"></td>
+                            <td class="px-6 py-4" th:text="${booking.checkOutDate}"></td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                      th:text="${booking.bookingStatus}"
+                                      th:classappend="${booking.bookingStatus.name() == 'CONFIRMED'} ? 'bg-green-100 text-green-800' : (${booking.bookingStatus.name() == 'CANCELLED'} ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')">
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a th:href="@{/admins/bookings/details/{bookingId}(bookingId=${booking.id})}" class="font-medium text-indigo-600 hover:underline">View Details</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(bookings)}">
+                            <td colspan="6" class="text-center py-8 text-gray-500">This guest has no booking history.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script th:src="@{/js/admin/common.js}"></script>
+
+</body>
+</html>

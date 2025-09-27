@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'About Us - ' + ${hotel.name}">About Us - Serene Shores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Header & Navigation Bar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+    <!-- Page Header -->
+    <section class="bg-gray-700 py-20 text-white text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-playfair font-bold">Our Story</h1>
+            <p class="text-lg md:text-xl mt-4">Discover the heart behind Serene Shores.</p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80" alt="Serene Shores Hotel Exterior" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h3 class="text-3xl font-playfair font-bold mb-4">Welcome to <span th:text="${hotel.name}">Serene Shores</span></h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        Founded in 2010, <span th:text="${hotel.name}">Serene Shores</span> was born from a dream to create a sanctuary where guests could escape the hustle and bustle of everyday life and reconnect with nature and themselves. We are more than just a hotel; we are a destination for peace, luxury, and unforgettable memories.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed">
+                        Our mission is to provide exceptional hospitality, personalized service, and a tranquil atmosphere. From our meticulously designed rooms to our world-class amenities, every detail is crafted with your comfort in mind. We invite you to experience the magic of <span th:text="${hotel.name}">Serene Shores</span>s.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/index_script.js}"></script>
+</body>
+</html>

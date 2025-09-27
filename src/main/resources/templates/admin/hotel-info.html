@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Information - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link:hover { background-color: #3f51b5; }
+        .sidebar-link.active { background-color: #303f9f; font-weight: 600; }
+        .submenu-link { color: #cbd5e0; }
+        .submenu-link:hover { background-color: #4a5568; color: #ffffff; }
+        .submenu-link.submenu-active { color: #ffffff; font-weight: 500; }
+
+        /* Styles for the modal transition */
+        .modal-transition {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .modal-hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<div class="flex h-screen bg-gray-200">
+    <!-- Sidebar Fragment -->
+    <div th:replace="~{admin/fragments/admin-dashboard-sidebar :: sidebar(activePage='settings-hotel')}"></div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header Fragment -->
+        <div th:replace="~{admin/fragments/admin-header :: header(pageTitle='Hotel Information')}"></div>
+
+        <!-- Content Area -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6 md:p-8">
+            <div class="max-w-5xl mx-auto">
+
+                <!-- Success/Error Messages -->
+                <div th:if="${successMessage}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-md shadow-sm" role="alert">
+                    <p class="font-bold">Success</p>
+                    <p th:text="${successMessage}"></p>
+                </div>
+                <div th:if="${errorMessage}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md shadow-sm" role="alert">
+                    <p class="font-bold">Error</p>
+                    <p th:text="${errorMessage}"></p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-6 sm:p-8 border-b border-gray-200 flex justify-between items-center">
+                        <h1 class="text-2xl font-bold text-gray-800" th:text="${hotel.name}">Serene Shores Resort</h1>
+                        <button id="edit-hotel-button" class="bg-indigo-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-indigo-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Edit Details
+                        </button>
+                    </div>
+                    <div class="p-6 sm:p-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div class="lg:col-span-1">
+                                <h3 class="text-base font-semibold text-gray-500 uppercase tracking-wider mb-3">Hero Image</h3>
+                                <div class="aspect-w-4 aspect-h-3 rounded-lg overflow-hidden shadow-md">
+                                    <img th:src="${hotel.imageUrl}" alt="Hotel Image" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500">Address</label>
+                                    <p class="mt-1 text-base text-gray-900" th:text="${hotel.address}">123 Ocean Drive, Paradise City</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500">Phone Number</label>
+                                    <p class="mt-1 text-base text-gray-900" th:text="${hotel.phoneNumber}">(123) 456-7890</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500">Email Address</label>
+                                    <p class="mt-1 text-base text-gray-900" th:text="${hotel.email}">contact@sereneshores.com</p>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-500">Description</label>
+                                    <p class="mt-1 text-base text-gray-700 leading-relaxed" th:text="${hotel.description}">
+                                        A beautiful resort located on the serene shores, offering luxury and comfort. Our goal is to provide an unforgettable experience for every guest.
+                                    </p>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-500 py-3">Location</label>
+                                    <iframe th:src="${hotel.location}">
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Edit Modal (Vanilla JS) -->
+        <div id="edit-hotel-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 modal-transition modal-hidden">
+            <div id="modal-content" class="bg-white rounded-lg shadow-2xl p-8 max-w-2xl w-full m-4 modal-transition modal-hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Edit Hotel Information</h2>
+                <form th:action="@{/admins/settings/hotel}" th:object="${hotel}" method="post" enctype="multipart/form-data" class="space-y-5">
+                    <input type="hidden" th:field="*{id}" />
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Hotel Name</label>
+                        <input type="text" id="name" th:field="*{name}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <input type="text" id="address" th:field="*{address}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" th:field="*{email}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea id="description" th:field="*{description}" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-gray-700">Location (iFrame embed code)</label>
+                        <textarea id="location" th:field="*{location}" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label for="imageFile" class="block text-sm font-medium text-gray-700">Update Hero Image</label>
+                        <input type="file" id="imageFile" name="imageFile" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"/>
+                    </div>
+                    <div class="flex justify-end pt-4 space-x-3 border-t border-gray-200 mt-6">
+                        <button type="button" id="cancel-edit-button" class="bg-gray-200 text-gray-800 font-semibold py-2 px-5 rounded-lg hover:bg-gray-300 transition duration-300">
+                            Cancel
+                        </button>
+                        <button type="submit" class="bg-indigo-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-indigo-700 transition duration-300">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- All JavaScript is now in an external file -->
+<script th:src="@{/js/admin/common.js}"></script>
+<script th:src="@{/js/admin/hotel-info.js}"></script>
+
+</body>
+</html>
+

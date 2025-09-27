@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${roomType.name} + ' - ' + ${hotel.name}">Room Details - Serene Shores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Header & Navigation Bar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="py-16">
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+            <!-- Left Side: Room Details -->
+            <div class="lg:col-span-2">
+                <div class="bg-white p-8 rounded-2xl shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h1 class="text-4xl font-bold font-playfair text-gray-900" th:text="${roomType.name}">Deluxe King Room</h1>
+                        <a href="javascript:history.back()" class="text-indigo-600 hover:text-indigo-800 transition duration-300 flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back
+                        </a>
+                    </div>
+                    <img th:src="${roomType.imageUrl}" alt="Room Image" class="rounded-lg mb-6 w-full h-96 object-cover">
+                    <p class="text-gray-600 leading-relaxed" th:text="${roomType.description}">A beautifully appointed room with a king-size bed and a stunning city view. Modern amenities ensure a comfortable and memorable stay.</p>
+
+                    <div class="mt-8">
+                        <div class="px-8 py-6 border-t bg-gray-50">
+                            <h3 class="text-2xl font-semibold mb-6 text-gray-800">What This Place Offers</h3>
+                            <div th:if="${groupedAmenities != null and not #maps.isEmpty(groupedAmenities)}" class="space-y-6">
+                                <div th:each="entry : ${groupedAmenities}">
+                                    <h4 class="text-lg font-bold text-gray-700 mb-3" th:text="${entry.key.displayName}">Amenity Type</h4>
+                                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        <div th:each="amenity : ${entry.value}" class="flex items-center text-gray-600">
+                             <span class="w-6 text-center mr-2">
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </span>
+                                            <span th:text="${amenity.name}">Amenity Name</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${groupedAmenities == null or #maps.isEmpty(groupedAmenities)}">
+                                <p class="text-gray-500">No specific amenities listed for this room type.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Booking Summary & Action -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-8 rounded-2xl shadow-lg sticky top-28">
+                    <h2 class="text-2xl font-bold font-playfair mb-4">Reservation</h2>
+
+                    <div class="space-y-3 text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-users mr-3 text-indigo-600 w-5 text-center"></i>
+                            <span>Max Guests: </span>
+                            <span class="font-semibold ml-1" th:text="${roomType.maxAdults} + ' Adults, ' + ${roomType.maxChildren} + ' Children'"></span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-door-open mr-3 text-indigo-600 w-5 text-center"></i>
+                            <span>Available Rooms: </span>
+                            <span class="font-semibold ml-1" th:text="${availableRoomCount}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-medium text-gray-700">Price per night:</span>
+                            <span class="text-2xl font-bold text-gray-900" th:text="${#numbers.formatDecimal(roomType.price, 0, 'COMMA', 0, 'POINT')} + ' MMK'"></span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <a th:href="@{/bookings/{id}(id=${roomType.id}, checkin=${param.checkin}, checkout=${param.checkout})}" class="w-full text-center bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition duration-300 block">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/index_script.js}"></script>
+
+</body>
+</html>
+
+
+

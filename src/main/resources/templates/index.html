@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${hotel.name} + ' Hotel & Resort'">Serene Shores Hotel & Resort</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Header & Navigation Bar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+    <!-- Hero Section -->
+    <section class="hero-section h-[60vh] md:h-[85vh] text-white flex items-center justify-center"
+             th:style="'background-image: url(\'' + ${hotel.imageUrl} + '\');'">
+        <div class="text-center bg-black bg-opacity-50 p-8 rounded-lg">
+            <h1 class="text-4xl md:text-6xl font-playfair font-bold mb-4">Experience Unmatched Luxury</h1>
+            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">Discover a place where comfort meets elegance, and every stay is a memorable journey.</p>
+            <a href="#featured-rooms" class="bg-white text-indigo-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition duration-300">Explore Our Rooms</a>
+        </div>
+    </section>
+
+    <!-- Room Search/Filter Section -->
+    <section class="bg-gray-800 py-8">
+        <div class="container mx-auto px-6">
+            <form th:action="@{/rooms/search}" method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end bg-white p-6 rounded-lg shadow-lg -mt-24 relative z-10">
+                <!-- Check-in Date -->
+                <div class="w-full">
+                    <label for="checkin" class="block text-sm font-medium text-gray-700 mb-1">Check-in</label>
+                    <input type="date" id="checkin" name="checkin" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <!-- Check-out Date -->
+                <div class="w-full">
+                    <label for="checkout" class="block text-sm font-medium text-gray-700 mb-1">Check-out</label>
+                    <input type="date" id="checkout" name="checkout" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <!-- Adults -->
+                <div class="w-full">
+                    <label for="adults" class="block text-sm font-medium text-gray-700 mb-1">Adults</label>
+                    <select id="adults" name="adults" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option>1</option>
+                        <option selected>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </div>
+                <!-- Children -->
+                <div class="w-full">
+                    <label for="children" class="block text-sm font-medium text-gray-700 mb-1">Children</label>
+                    <select id="children" name="children" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option selected>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+                <!-- Submit Button -->
+                <div class="w-full">
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Featured Rooms Section -->
+    <section id="featured-rooms" class="py-16">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-playfair font-bold text-gray-800">Our Featured Rooms</h2>
+                <p class="text-gray-600 mt-2">Crafted for your comfort and delight.</p>
+            </div>
+
+            <!-- Room Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Loop through featured rooms -->
+                <div th:each="roomType : ${featuredRooms}">
+                    <div th:replace="~{fragments/room_card :: roomCard(roomType=${roomType})}"></div>
+                </div>
+                <!-- Placeholder if no featured rooms -->
+                <div th:if="${featuredRooms == null or #lists.isEmpty(featuredRooms)}" class="col-span-full text-center text-gray-500">
+                    <p>No featured rooms are available at the moment. Please check back later!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Custom JS -->
+<script th:src="@{/js/index_script.js}"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Room Detail Card Fragment
+  - A detailed, two-column layout for listing rooms.
+  - Expects a 'roomType' object and an 'isOdd' boolean to alternate the layout.
+-->
+<div th:fragment="roomDetailCard(roomType, isOdd)"
+     th:if="${roomType != null}"
+     class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+    <!-- Image Column -->
+    <div class="rounded-lg overflow-hidden shadow-lg" th:classappend="${isOdd} ? 'md:order-last' : ''">
+        <img th:src="${roomType.imageUrl}"
+             th:alt="${'Photo of ' + roomType.name}"
+             src="https://placehold.co/600x400/334155/FFFFFF?text=Room"
+             class="w-full h-80 object-cover">
+    </div>
+
+    <!-- Details Column -->
+    <div>
+        <h3 th:text="${roomType.name}" class="text-3xl font-playfair font-bold mb-4">Room Name</h3>
+        <p th:text="${roomType.description}" class="text-gray-600 leading-relaxed mb-6">Room description goes here.</p>
+        <div class="flex items-center space-x-6">
+            <span class="text-2xl font-bold text-indigo-600">
+                <span th:text="${#numbers.formatDecimal(roomType.price, 0, 'COMMA', 0, 'POINT')}">150,000</span> MMK / night
+            </span>
+            <a th:href="@{/rooms/{id}(id=${roomType.id})}"
+               class="bg-gray-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-900 transition duration-300">
+                View Details
+            </a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+

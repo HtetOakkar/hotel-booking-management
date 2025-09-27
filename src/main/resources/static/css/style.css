@@ -1,0 +1,17 @@
+/* Custom styles for typography and minor tweaks */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa; /* Light gray background */
+}
+.font-playfair {
+    font-family: 'Playfair Display', serif;
+}
+
+.hero-section {
+    background-size: cover;
+    background-position: center;
+}
+/*.hero-section {*/
+/*    background-image: url('https://placehold.co/1920x1080/000000/FFFFFF?text=Lobby');*/
+/*    !* The hero image can be replaced with a dynamic one from the backend *!*/
+/*}*/

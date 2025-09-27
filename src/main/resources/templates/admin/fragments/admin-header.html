@@ -1,0 +1,25 @@
+<header th:fragment="header(pageTitle)" class="flex justify-between items-center p-6 bg-white border-b-2 border-gray-200">
+    <div class="flex items-center">
+        <button id="sidebar-toggle" class="md:hidden mr-4 text-gray-600 focus:outline-none">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h2 class="text-2xl font-semibold text-gray-800" th:text="${pageTitle}">Dashboard</h2>
+    </div>
+
+    <!-- Profile Dropdown -->
+    <div class="relative">
+        <button id="profile-dropdown-button" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <img class="h-8 w-8 rounded-full object-cover" th:src="${adminProfileImageUrl ?: 'https://placehold.co/150x150/E2E8F0/4A5568?text=A'}" alt="Admin Profile">
+            <span class="hidden md:inline-block ml-2 font-medium text-gray-700" th:text="${adminFullName ?: 'Admin User'}">Admin User</span>
+            <svg class="ml-1 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="profile-dropdown-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden border border-gray-200">
+            <a th:href="@{/admins/profile/change-password}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Change Password</a>
+        </div>
+    </div>
+</header>
+

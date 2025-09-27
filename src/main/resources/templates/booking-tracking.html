@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Booking - Serene Shores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Header & Navigation Bar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+    <!-- Page Header -->
+    <section class="bg-gray-700 py-20 text-white text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-playfair font-bold">Track Your Booking</h1>
+            <p class="text-lg md:text-xl mt-4">Enter your tracking ID to view your booking details.</p>
+        </div>
+    </section>
+
+    <!-- Tracking Form Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-6 max-w-2xl">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <form th:action="@{/bookings/track}" method="post" class="flex items-center">
+                    <input type="text" name="trackingId" placeholder="Enter your tracking ID" required class="w-full p-3 border border-gray-300 rounded-l-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="submit" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-r-lg hover:bg-indigo-700 transition duration-300">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div th:if="${successMessage}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mt-8 rounded-md shadow-sm" role="alert">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-8 rounded-md shadow-sm" role="alert">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <!-- Booking Details Section -->
+            <div th:if="${booking}" class="bg-white p-8 rounded-lg shadow-lg mt-8">
+                <h2 class="text-3xl font-playfair font-bold mb-6">Booking Details</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-600">Tracking ID:</span>
+                        <span class="text-gray-800" th:text="${booking.trackingId}"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-600">Status:</span>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                              th:text="${booking.bookingStatus}"
+                              th:classappend="${booking.bookingStatus.name() == 'CONFIRMED'} ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-600">Room Type:</span>
+                        <span class="text-gray-800" th:text="${booking.roomTypeName}"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-600">Check-in Date:</span>
+                        <span class="text-gray-800" th:text="${booking.checkInDate}"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-600">Check-out Date:</span>
+                        <span class="text-gray-800" th:text="${booking.checkOutDate}"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-600">Nights:</span>
+                        <span class="text-gray-800" th:text="${booking.nights}"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-600">Total Amount:</span>
+                        <span class="text-gray-800" th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')} + ' MMK'"></span>
+                    </div>
+                </div>
+                <!-- Cancel Button -->
+                <div class="mt-6 text-right">
+                    <form th:if="${booking.bookingStatus.name() == 'PENDING' or booking.bookingStatus.name() == 'CONFIRMED'}"
+                          th:action="@{/bookings/cancel/{trackingId}(trackingId=${booking.trackingId})}"
+                          method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                        <button type="submit" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
+                            Cancel Booking
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div th:if="${errorMessage}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-8 rounded-md shadow-sm" role="alert">
+                <p th:text="${errorMessage}"></p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/index_script.js}"></script>
+</body>
+</html>
